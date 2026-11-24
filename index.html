@@ -72,6 +72,54 @@ main{max-width:760px;margin:0 auto;padding:18px 16px 100px}
 .float{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--olive);color:var(--on-olive);text-decoration:none;font-weight:700;
   padding:12px 18px;border-radius:999px;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ===== Product details popup ===== */
+.pic,.name{cursor:pointer}
+.more{background:none;border:0;color:var(--olive-deep);font:inherit;font-size:14px;font-weight:700;text-decoration:underline;padding:0;text-align:left;cursor:pointer}
+.more:focus-visible,.x:focus-visible,.sim button:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+body.lock{overflow:hidden}
+.modal{position:fixed;inset:0;z-index:30;display:none;background:rgba(0,0,0,.55);align-items:flex-end;justify-content:center}
+.modal.open{display:flex}
+.panel{background:var(--bg);color:var(--ink);width:100%;max-width:560px;height:94%;border-radius:22px 22px 0 0;border:2px solid var(--ink);border-bottom:0;display:flex;flex-direction:column;overflow:hidden;animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.ph{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:2px solid var(--ink);background:var(--surface)}
+.ph b{font-family:"Bricolage Grotesque","DM Sans",system-ui,sans-serif;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.x{flex:0 0 auto;border:2px solid var(--ink);background:var(--pop);color:var(--on-pop);width:38px;height:38px;border-radius:50%;font-size:20px;font-weight:800;line-height:1;cursor:pointer}
+.pb{overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+.hero{background:var(--tint);border-bottom:2px solid var(--ink);aspect-ratio:1/1;overflow:hidden;display:grid;place-items:center;cursor:zoom-in}
+.hero img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;transition:transform .25s}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hero img{mix-blend-mode:normal}}
+:root[data-theme="dark"] .hero img{mix-blend-mode:normal}
+.hero.zoom{cursor:zoom-out}
+.hero.zoom img{transform:scale(2)}
+.hint{margin:-6px 0 0;color:var(--muted);font-size:13px}
+.pc{padding:14px 16px 18px;display:flex;flex-direction:column;gap:16px}
+.ptitle{margin:0;font-family:"Bricolage Grotesque","DM Sans",system-ui,sans-serif;font-weight:800;font-size:25px;line-height:1.1}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tag{border:2px solid var(--ink);border-radius:999px;padding:3px 11px;font-size:13px;font-weight:700;background:var(--tint)}
+.sec h3{margin:0 0 8px;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.sec p{margin:0}
+.kv{border:2px solid var(--ink);border-radius:14px;overflow:hidden;background:var(--surface)}
+.kv div{display:flex;gap:10px;padding:9px 12px;border-bottom:1.5px solid var(--dot)}
+.kv div:last-child{border-bottom:0}
+.kv span:first-child{flex:0 0 36%;color:var(--muted);font-weight:500}
+.kv span:last-child{font-weight:700}
+.sec ul,.sec ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+.tbl{width:100%;border-collapse:collapse;font-size:14px;border:2px solid var(--ink);border-radius:12px;overflow:hidden;background:var(--surface)}
+.tbl th,.tbl td{padding:8px 10px;text-align:center;border-bottom:1.5px solid var(--dot)}
+.tbl th{background:var(--tint);font-weight:800}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tr.hl td{background:var(--pop);color:var(--on-pop);font-weight:800}
+.fine{color:var(--muted);font-size:13px;margin:6px 0 0}
+.sim{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.sim::-webkit-scrollbar{display:none}
+.sim button{flex:0 0 100px;border:2px solid var(--ink);border-radius:14px;background:var(--surface);padding:0;overflow:hidden;cursor:pointer;color:var(--ink);font:inherit;text-align:left}
+.sim .sp{aspect-ratio:1/1;background:var(--tint);display:grid;place-items:center;border-bottom:2px solid var(--ink)}
+.sim img{width:100%;height:100%;object-fit:contain}
+.sim small{display:block;padding:5px 7px;font-weight:700;font-size:12px;line-height:1.15}
+.pf{padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));border-top:2px solid var(--ink);background:var(--surface)}
+.pf .wa{margin:0;font-size:17px}
+@media (min-width:620px){.modal{align-items:center}.panel{height:90%;border-radius:22px;border-bottom:2px solid var(--ink)}}
 </style>
 </head><link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#1f3a5f">
@@ -98,6 +146,13 @@ main{max-width:760px;margin:0 auto;padding:18px 16px 100px}
   <div class="chips" id="chips"></div>
 </div>
 <main><div class="grid" id="grid"></div></main>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="panel">
+    <div class="ph"><b id="mTop"></b><button class="x" id="mClose" aria-label="Band karein">&#10005;</button></div>
+    <div class="pb" id="mBody"></div>
+    <div class="pf" id="mFoot"></div>
+  </div>
+</div>
 <a class="float" id="floatWa" target="_blank" rel="noopener">WhatsApp pe baat karein</a>
 
 <script>
@@ -253,10 +308,136 @@ function drawGrid(){
     const a = document.createElement("a");
     a.className = "wa"; a.target = "_blank"; a.rel = "noopener";
     a.href = waLink(p); a.textContent = "WhatsApp pe order karein";
-    card.querySelector(".info").appendChild(a);
+    const more = document.createElement("button");
+    more.className = "more"; more.type = "button"; more.textContent = "Poori details dekhein ›";
+    more.onclick = () => openProduct(p);
+    const info = card.querySelector(".info");
+    info.insertBefore(more, info.querySelector(".sizes").nextSibling);
+    info.appendChild(a);
+    [card.querySelector(".pic"), card.querySelector(".name")].forEach(el => {
+      el.setAttribute("role", "button"); el.tabIndex = 0;
+      el.onclick = () => openProduct(p);
+      el.onkeydown = e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); openProduct(p); } };
+    });
     g.appendChild(card);
   });
 }
+
+/* ========== PRODUCT DETAILS: yahan se details badlein ========== */
+/* Har category ki common details. Apne kapdon ke hisaab se badal lein. */
+const CAT_INFO = {
+  "Jeans":    {fabric:"Denim (cotton)", care:"Ulta karke thande paani mein dhoyein", features:["5 pocket design","Zip + button fly","Roz ke campus wear ke liye"], chartHead:["Size","Waist (inch)"], chart:s=>[s,s]},
+  "Cargo":    {fabric:"Cotton", care:"Thande paani mein dhoyein", features:["Side cargo pockets","Aaramdayak relaxed fit"], chartHead:["Size","Waist (inch)"], chart:s=>[s,s]},
+  "Shirts":   {fabric:"Cotton", care:"Thande paani mein dhoyein, halki istri", features:["Full button front","Collar wali shirt"], chartHead:["Size","Chest (inch)"], chart:s=>[s,{M:"40",L:"42",XL:"44"}[s]||"-"]},
+  "T-shirts": {fabric:"Cotton", care:"Ulta karke thande paani mein dhoyein", features:["Soft aur halka kapda","Roz ke wear ke liye"], chartHead:["Size","Chest (inch)"], chart:s=>[s,{S:"38",M:"40",L:"42",XL:"44"}[s]||"-"]},
+  "Hoodies":  {fabric:"Fleece / cotton blend", care:"Ulta karke thande paani mein dhoyein", features:["Kangaroo pocket","Hood with drawstring"], chartHead:["Size","Chest (inch)"], chart:s=>[s,{M:"40",L:"42",XL:"44"}[s]||"-"]},
+  "Jackets":  {fabric:"", care:"Sukhe kapde se saaf karein", features:["Front zip","Sardi ke liye"], chartHead:["Size","Chest (inch)"], chart:s=>[s,{M:"40",L:"42",XL:"44"}[s]||"-"]}
+};
+/* Kisi ek product ki khaas details (optional). Naam bilkul PRODUCTS jaisa likhein. Example:
+const PROD_INFO = {
+  "Baggy Jeans – Light Blue": {desc:"Wide-leg baggy fit, light wash.", fabric:"Rigid denim", features:["High waist"]}
+};
+*/
+const PROD_INFO = {};
+/* Order ke neeche dikhne wale extra notes (delivery, return, payment). Khaali chhodna ho to [] rakhein. */
+const SHOP_NOTES = ["Delivery charges alag se lagenge. Kitne lagenge, ye order ke time WhatsApp pe bata diya jayega."];
+/* ================================================================ */
+
+const modal = $("modal"), mBody = $("mBody"), mFoot = $("mFoot");
+let cur = null;
+function mk(tag, cls, text){ const e = document.createElement(tag); if(cls) e.className = cls; if(text != null) e.textContent = text; return e; }
+function infoFor(p){
+  const c = CAT_INFO[p.cat] || {}, o = PROD_INFO[p.name] || {};
+  const fit = /baggy/i.test(p.name) ? "Baggy / loose" : /straight/i.test(p.name) ? "Straight fit" : /boxy/i.test(p.name) ? "Boxy fit" : "";
+  return {
+    desc: o.desc || "", fit: o.fit || fit, fabric: o.fabric || c.fabric || "", care: o.care || c.care || "",
+    features: o.features || c.features || [], chartHead: c.chartHead, chart: c.chart
+  };
+}
+function section(title){ const s = mk("div","sec"); s.appendChild(mk("h3",null,title)); return s; }
+function renderProduct(){
+  const p = cur, inf = infoFor(p), sel = state.sel[p.name] || p.sizes[0];
+  $("mTop").textContent = p.name;
+  mBody.innerHTML = ""; mFoot.innerHTML = "";
+
+  const hero = mk("div","hero");
+  if(p.img){ const im = mk("img"); im.src = p.img; im.alt = p.name; hero.appendChild(im);
+    hero.onclick = e => {
+      const r = hero.getBoundingClientRect();
+      im.style.transformOrigin = ((e.clientX - r.left) / r.width * 100) + "% " + ((e.clientY - r.top) / r.height * 100) + "%";
+      hero.classList.toggle("zoom");
+    };
+  } else hero.innerHTML = art(p);
+  mBody.appendChild(hero);
+
+  const pc = mk("div","pc"); mBody.appendChild(pc);
+  const t = mk("h2","ptitle",p.name); t.id = "mTitle"; pc.appendChild(t);
+  const row = mk("div","row");
+  row.appendChild(p.price ? mk("div","price","₹" + p.price) : mk("div","ask","Daam ke liye WhatsApp karein"));
+  row.appendChild(mk("span","tag",p.cat));
+  pc.appendChild(row);
+  if(p.img) pc.appendChild(mk("p","hint","Photo par tap karke zoom karein"));
+  if(inf.desc){ const d = section("Description"); d.appendChild(mk("p",null,inf.desc)); pc.appendChild(d); }
+
+  const sz = section("Size chunein"); const sw = mk("div","sizes");
+  p.sizes.forEach(x => {
+    const b = mk("button","size",x); b.type = "button"; b.setAttribute("aria-pressed", x === sel);
+    b.onclick = () => { state.sel[p.name] = x; renderProduct(); drawGrid(); };
+    sw.appendChild(b);
+  });
+  sz.appendChild(sw); pc.appendChild(sz);
+
+  const rows = [["Category", p.cat], ["Fit", inf.fit], ["Kapda", inf.fabric], ["Dhone ka tareeka", inf.care], ["Uplabdh sizes", p.sizes.join(", ")]].filter(r => r[1]);
+  const det = section("Product ki jaankari"); const kv = mk("div","kv");
+  rows.forEach(r => { const d = mk("div"); d.appendChild(mk("span",null,r[0])); d.appendChild(mk("span",null,r[1])); kv.appendChild(d); });
+  det.appendChild(kv); pc.appendChild(det);
+
+  if(inf.features.length){ const f = section("Khaas baatein"); const ul = mk("ul"); inf.features.forEach(x => ul.appendChild(mk("li",null,x))); f.appendChild(ul); pc.appendChild(f); }
+
+  if(inf.chart){
+    const c = section("Size chart (lagbhag)"); const tb = mk("table","tbl"); const th = mk("tr");
+    inf.chartHead.forEach(h => th.appendChild(mk("th",null,h))); tb.appendChild(th);
+    p.sizes.forEach(x => { const tr = mk("tr", x === sel ? "hl" : ""); inf.chart(x).forEach(v => tr.appendChild(mk("td",null,v))); tb.appendChild(tr); });
+    c.appendChild(tb); c.appendChild(mk("p","fine","Size thoda upar-neeche ho sakta hai. Pakka size jaanne ke liye WhatsApp pe poochein.")); pc.appendChild(c);
+  }
+
+  const how = section("Order kaise karein"); const ol = mk("ol");
+  ["Apna size chunein","Neeche \"WhatsApp pe order karein\" dabayein","Chuna hua kapda aur size apne aap message mein aa jayega, bas bhej dein"].forEach(x => ol.appendChild(mk("li",null,x)));
+  how.appendChild(ol); pc.appendChild(how);
+  if(SHOP_NOTES.length){ const n = section("Zaroori jaankari"); const ul = mk("ul"); SHOP_NOTES.forEach(x => ul.appendChild(mk("li",null,x))); n.appendChild(ul); pc.appendChild(n); }
+
+  const sim = PRODUCTS.filter(x => x.cat === p.cat && x !== p).slice(0,6);
+  if(sim.length){
+    const s2 = section("Aur bhi dekhein"); const w = mk("div","sim");
+    sim.forEach(x => {
+      const b = mk("button"); b.type = "button";
+      const sp = mk("div","sp"); if(x.img){ const im = mk("img"); im.src = x.img; im.alt = ""; im.loading = "lazy"; sp.appendChild(im); }
+      b.appendChild(sp); b.appendChild(mk("small",null,x.name));
+      b.onclick = () => { cur = x; renderProduct(); mBody.scrollTop = 0; };
+      w.appendChild(b);
+    });
+    s2.appendChild(w); pc.appendChild(s2);
+  }
+
+  const a = mk("a","wa","WhatsApp pe order karein" + (p.price ? " · ₹" + p.price : ""));
+  a.target = "_blank"; a.rel = "noopener"; a.href = waLink(p);
+  mFoot.appendChild(a);
+}
+function openProduct(p){
+  cur = p; renderProduct(); mBody.scrollTop = 0;
+  if(!modal.classList.contains("open")){ history.pushState({modal:1}, ""); }
+  modal.classList.add("open"); document.body.classList.add("lock");
+  $("mClose").focus();
+}
+function closeProduct(fromPop){
+  if(!modal.classList.contains("open")) return;
+  modal.classList.remove("open"); document.body.classList.remove("lock");
+  if(!fromPop && history.state && history.state.modal) history.back();
+}
+$("mClose").onclick = () => closeProduct();
+modal.addEventListener("click", e => { if(e.target === modal) closeProduct(); });
+document.addEventListener("keydown", e => { if(e.key === "Escape") closeProduct(); });
+window.addEventListener("popstate", () => closeProduct(true));
 $("q").addEventListener("input", e => { state.q = e.target.value; drawGrid(); });
 drawChips(); drawGrid();
 </script>
